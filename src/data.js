@@ -1,8 +1,12 @@
-{
+import juliusomo from "./images/avatars/image-juliusomo.webp";
+import amyrobson from "./images/avatars/image-amyrobson.webp";
+import maxblagun from "./images/avatars/image-maxblagun.webp";
+import ramsesmiron from "./images/avatars/image-ramsesmiron.webp";
+const data = {
   "currentUser": {
     "image": { 
       "png": "./images/avatars/image-juliusomo.png",
-      "webp": "./images/avatars/image-juliusomo.webp"
+      "webp": juliusomo
     },
     "username": "juliusomo"
   },
@@ -15,7 +19,7 @@
       "user": {
         "image": { 
           "png": "./images/avatars/image-amyrobson.png",
-          "webp": "./images/avatars/image-amyrobson.webp"
+          "webp": amyrobson
         },
         "username": "amyrobson"
       },
@@ -29,7 +33,7 @@
       "user": {
         "image": { 
           "png": "./images/avatars/image-maxblagun.png",
-          "webp": "./images/avatars/image-maxblagun.webp"
+          "webp": maxblagun
         },
         "username": "maxblagun"
       },
@@ -43,7 +47,7 @@
           "user": {
             "image": { 
               "png": "./images/avatars/image-ramsesmiron.png",
-              "webp": "./images/avatars/image-ramsesmiron.webp"
+              "webp": ramsesmiron
             },
             "username": "ramsesmiron"
           }
@@ -57,7 +61,7 @@
           "user": {
             "image": { 
               "png": "./images/avatars/image-juliusomo.png",
-              "webp": "./images/avatars/image-juliusomo.webp"
+              "webp": juliusomo
             },
             "username": "juliusomo"
           }
@@ -66,3 +70,5 @@
     }
   ]
 }
+
+export default data;

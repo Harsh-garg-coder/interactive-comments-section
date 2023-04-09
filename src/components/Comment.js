@@ -2,6 +2,11 @@
 import styles from "../styles/Comment.module.css";
 import { useEffect, useState } from "react";
 import AddNewComment from "./AddNewComment";
+import plusIcon from "../images/icon-plus.svg";
+import minusIcon from "../images/icon-minus.svg";
+import deleteIcon from "../images/icon-delete.svg";
+import editIcon from "../images/icon-edit.svg";
+import replyIcon from "../images/icon-reply.svg";
 
 export default function Comment(props) {
     const [isEditable, setIsEditable] = useState(false);
@@ -23,13 +28,13 @@ export default function Comment(props) {
             <div className = {styles["comment-container"]}>
                 <div className = {styles["votes-container"]}>
                     <img 
-                        src = "/images/icon-plus.svg" 
+                        src = {plusIcon}
                         alt = "upVote"
                         onClick = {props.upVote}
                     />
                     <span>{props.commentData.score}</span>  
                     <img 
-                        src = "/images/icon-minus.svg" 
+                        src = {minusIcon}
                         alt = "downVote"
                         onClick = {props.downVote}
                     />
@@ -100,14 +105,14 @@ export default function Comment(props) {
                                 className = {styles["delete-btn"]}
                                 onClick = {props.handleDelete}
                             >
-                                <img src = "/images/icon-delete.svg"/>
+                                <img src = {deleteIcon}/>
                                 Delete
                             </div>
                             <div 
                                 className = {styles["edit-btn"]}
                                 onClick = {() => setIsEditable((prev) => !prev)}
                             >
-                                <img src = "/images/icon-edit.svg"/>
+                                <img src = {editIcon}/>
                                 Edit
                             </div>
                         </div> 
@@ -116,7 +121,7 @@ export default function Comment(props) {
                             className = {styles["reply-btn"]}
                             onClick = {() => setShowAddReplyBox((prev) => !prev)}
                         >
-                            <img src = "/images/icon-reply.svg"/>
+                            <img src = {replyIcon}/>
                             Reply
                         </div>
                     }

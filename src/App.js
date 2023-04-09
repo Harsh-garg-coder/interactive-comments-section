@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import data from "./data.json";
+import data from "./data";
 import Comments from "./components/Comments";
 import AddNewComment from "./components/AddNewComment";
 import uuid from "react-uuid";
