@@ -1,0 +1,149 @@
+.comment-container {
+    background-color: var(--white);
+    padding:30px;
+    display: flex;
+    border-radius:8px;
+    position:relative;
+    margin-bottom:20px;
+    /* margin-left:20px; */
+}
+
+.votes-container {
+    min-width:50px;
+    height:100px;
+    padding:10px;
+    color:var(--moderate-blue);
+    border-radius:3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; 
+    font-size:1rem;
+    font-weight:600;
+    background-color:var(--very-light-grey)
+}
+  
+.votes-container > span {
+    margin:10px 0px 10px 0px;
+}
+
+.votes-container > img {
+    cursor: pointer;
+}
+
+.content-container {
+    padding-left:30px;
+    width:100%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom:15px;
+}
+
+.header img {
+    margin-right:20px;
+}
+
+.name {
+    color: var(--dark-blue);
+    font-weight:700;
+    line-height:1.5;
+    margin-right:30px;
+}
+
+.created-at {
+    color: var(--grayish-blue);
+}
+
+.content {
+    color:var(--grayish-blue);
+}
+
+.user-images {
+    width:2rem;
+    height:2rem;    
+}
+
+.controls-container {
+    position:absolute;
+    top:30px;
+    right:30px;
+}
+
+.reply-btn,
+.edit-btn,
+.delete-btn {
+    cursor: pointer;
+}
+
+.reply-btn:hover,
+.edit-btn:hover,
+.delete-btn:hover {
+    opacity: 0.6;
+}
+
+.delete-btn {
+    margin-right:10px;
+}
+
+.reply-btn img,
+.edit-btn img,
+.delete-btn img {
+    margin-right:5px;
+}
+
+.delete-edit-container {
+    display:flex;
+}
+
+.you-tag {
+    margin-left:5px;
+    background-color:var(--moderate-blue);
+    padding:2px 5px;
+    color:var(--white);
+    font-size:0.7rem;
+}
+
+.reply-tag {
+    color: var(--moderate-blue);
+    font-weight:500;
+    margin-right:4px;
+}
+
+.content-textarea {
+    width:100%;
+    padding:10px 20px;
+    height:70px;
+    margin-bottom:5px;
+}
+
+.editable-container {
+    text-align: right;
+}
+@media only screen and (max-width:640px) {
+    .comment-container {
+        flex-direction: column-reverse;
+    }
+
+    .votes-container {
+        flex-direction: row;
+        width:100px;
+        height:35px;
+    }
+
+    .votes-container > span {
+        margin:0px 10px 0px 10px;
+    }
+
+    .content-container {
+        padding-left:0px;
+        margin-bottom:15px;
+    }
+
+    .controls-container {
+        top:calc(100% - 54px);
+        bottom:30px;
+    }
+}
