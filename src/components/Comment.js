@@ -12,6 +12,7 @@ export default function Comment(props) {
     const [isEditable, setIsEditable] = useState(false);
     const [newContent, setNewContent] = useState(props.commentData.content);
     const [showAddReplyBox, setShowAddReplyBox] = useState(false);
+    const [vote, setVote] = useState(0);
 
     const handleUpdate = () => {
         props.updateContent(newContent)
@@ -23,6 +24,20 @@ export default function Comment(props) {
         setShowAddReplyBox(false);
     }
 
+    const handleUpvote = () => {
+        if(vote < 1) {
+            props.upVote();
+            setVote(1);
+        }
+    }
+
+    const handleDownvote = () => {
+        if(vote > -1) {
+            props.downVote();
+            setVote((prev) => prev - 1);
+        }
+    }
+
     return (
         <>
             <div className = {styles["comment-container"]}>
@@ -30,13 +45,13 @@ export default function Comment(props) {
                     <img 
                         src = {plusIcon}
                         alt = "upVote"
-                        onClick = {props.upVote}
+                        onClick = {handleUpvote}
                     />
                     <span>{props.commentData.score}</span>  
                     <img 
                         src = {minusIcon}
                         alt = "downVote"
-                        onClick = {props.downVote}
+                        onClick = {handleDownvote}
                     />
                 </div>
 
