@@ -42,6 +42,23 @@
   background-color: var(--soft-red);
 }
 
+.undo-container {
+  padding:50px;
+  background-color: var(--white);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.undo-container img {
+  width:20px;
+  height:20px;
+  cursor: pointer;
+}
+
+
 @media only screen and (max-width: 740px) {
   .app-container {
     width: 95%;

@@ -5,6 +5,7 @@ import Comments from "./components/Comments";
 import AddNewComment from "./components/AddNewComment";
 import uuid from "react-uuid";
 import Modal from "./components/Modal";
+import crossIcon from "./images/icon-cross.png";
 
 let initialData = localStorage.getItem("interactive-comment-section-data");
 
@@ -20,6 +21,8 @@ export default function App() {
   const [showModal, setShowModal] = useState(false);
   const [idOfCommentToDelete, setIdOfCommentToDelete] = useState(null);
   const [parentIdOfCommentToDelete, setParentIdOfCommentToDelete] = useState(null);
+  const [showUndoButton, setShowUndoButton] = useState(false);
+  const [prevComments, setPrevComments] = useState("");
 
   const addComment = function (text) {
     try {
@@ -43,6 +46,8 @@ export default function App() {
     try {
       const id = idOfCommentToDelete;
       const parentId = parentIdOfCommentToDelete;
+
+      setPrevComments(comments);
 
       if(parentId) {
         // deleting reply
@@ -72,6 +77,13 @@ export default function App() {
         });
 
       }
+
+      setShowUndoButton(true);
+
+      setInterval(() => {
+        setShowUndoButton(false);
+      }, 5000);
+
     } catch(error) {
       console.log(error);
     }
@@ -214,13 +226,40 @@ export default function App() {
     }
   }
 
+  const undoDelete = function () {
+    setComments([...prevComments]);
+    setShowUndoButton(false);
+  }
+  
+  const hideUndoButton = function () {
+    setShowUndoButton(false);
+  }
 
   useEffect(() => {
     sortCommentsOnVotes();
   }, []);
 
+  useEffect(() => {
+    if(!showUndoButton) {
+      setPrevComments([]);
+    }
+  }, [showUndoButton])
+
   return (
     <div className="app-container">
+      {
+        showUndoButton && 
+        <div className = "undo-container">
+          <button 
+            className = "blue-btn"
+            onClick = {undoDelete}
+          >Undo Delete</button>
+          <img 
+            src = {crossIcon}
+            onClick = {hideUndoButton}
+          />
+        </div>
+      }
       <Comments 
         comments = {comments}
         deleteComment = {() => setShowModal(true)}
