@@ -26,6 +26,8 @@ export default function App() {
 
   const addComment = function (text) {
     try {
+      if(!text) return;
+
       const newComment = {
         "id": uuid(),
         "content": text,
@@ -200,6 +202,7 @@ export default function App() {
 
   const addReply = function (content, replyingTo, commentId) {
     try{
+      if(!content) return;
       setComments((currentComments) => {
         return currentComments.map((currentComment) => {
           if(currentComment.id !== commentId) {
