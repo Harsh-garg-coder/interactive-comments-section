@@ -58,7 +58,6 @@
   cursor: pointer;
 }
 
-
 @media only screen and (max-width: 740px) {
   .app-container {
     width: 95%;

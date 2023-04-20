@@ -1,14 +1,6 @@
-
 .replies-container {
-    margin-left:30px;
-    padding-left:30px;
+    margin-left:10px;
+    padding-left:10px;
     padding-bottom:10px;
     border-left:1px solid var(--light-grayish-blue);
-}
-
-@media only screen and (max-width: 640px) {
-    .replies-container {
-        margin-left:15px;
-        padding-left:15px;
-    }
 }

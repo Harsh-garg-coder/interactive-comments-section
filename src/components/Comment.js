@@ -1,6 +1,6 @@
 
 import styles from "../styles/Comment.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddNewComment from "./AddNewComment";
 import plusIcon from "../images/icon-plus.svg";
 import minusIcon from "../images/icon-minus.svg";
@@ -27,7 +27,7 @@ export default function Comment(props) {
     const handleUpvote = () => {
         if(vote < 1) {
             props.upVote();
-            setVote(1);
+            setVote((prev) => prev + 1);
         }
     }
 
@@ -76,12 +76,10 @@ export default function Comment(props) {
                             isEditable ?
                             <div className = {styles["editable-container"]}>
                                 <textarea
-                                    // value = {props.commentData.content}
                                     className = {styles["content-textarea"]}
                                     value = {newContent}
                                     onChange = {(e) => setNewContent(e.target.value)}
                                     >
-                                    {/* @{props.commentData.replyingTo}{props.commentData.content} */}
                                 </textarea>
                                 <button 
                                     className = {[styles["update-btn"],"blue-btn"].join(" ")}
@@ -99,15 +97,6 @@ export default function Comment(props) {
                                 {props.commentData.content}
                             </>
                         }
-                        {/* <textarea> */}
-                        {/* {
-                            props.commentData.replyingTo && 
-                            <span className = {styles["reply-tag"]}>@
-                                {props.commentData.replyingTo}
-                            </span>
-                        }
-                        {props.commentData.content} */}
-                        {/* </textarea> */}
                     </div>
                 </div>
 

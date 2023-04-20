@@ -1,23 +1,14 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import data from "./data";
+import { currentUserData , commentsData } from './data';
 import Comments from "./components/Comments";
 import AddNewComment from "./components/AddNewComment";
 import uuid from "react-uuid";
 import Modal from "./components/Modal";
 import crossIcon from "./images/icon-cross.png";
 
-let initialData = localStorage.getItem("interactive-comment-section-data");
-
-if(!initialData) {
-  initialData = data;
-} else {
-  initialData = JSON.parse(initialData);
-}
-
 export default function App() {
-  const [comments, setComments] = useState(initialData.comments);
-  const [currentUser, setCurrentUser] = useState(initialData.currentUser);
+  const [comments, setComments] = useState(commentsData);
   const [showModal, setShowModal] = useState(false);
   const [idOfCommentToDelete, setIdOfCommentToDelete] = useState(null);
   const [parentIdOfCommentToDelete, setParentIdOfCommentToDelete] = useState(null);
@@ -28,17 +19,23 @@ export default function App() {
     try {
       if(!text) return;
 
+      const commentId = uuid();
+
       const newComment = {
-        "id": uuid(),
+        "id": commentId,
         "content": text,
         "score": 0,
-        "user": {...currentUser},
-        "replies": [], 
+        "user": {...currentUserData}
       };
 
       setComments((prevComments) => {
-        return [...prevComments, newComment];
+        const newComments = {...prevComments};
+
+        newComments[null].push(newComment);
+
+        return newComments;
       });
+
     } catch(error) {
       console.log(error);
     }
@@ -47,38 +44,21 @@ export default function App() {
   const deleteComment = function () {
     try {
       const id = idOfCommentToDelete;
-      const parentId = parentIdOfCommentToDelete;
+      const parentId = parentIdOfCommentToDelete ?? null;
+
 
       setPrevComments(comments);
 
-      if(parentId) {
-        // deleting reply
-        setComments((currentComments) => {
-          return currentComments.map((currentComment) => {
-            if(currentComment.id !== parentId) {
-              return currentComment;
-            }
+      setComments((prevComments) => {
+        const newComments = {...prevComments};
 
-            const newComment = {...currentComment};
-            newComment.replies = newComment.replies.filter((currentReply) => {
-              if(currentReply.id === id) return false;
-              return true;
-            });
-
-            return newComment;
-          })
+        newComments[parentId] = newComments[parentId].filter((currentComment) => {
+          if(currentComment.id === id) return false;
+          return true;
         });
 
-      } else {
-        // deleting comment
-        setComments((prevComments) => {
-          return prevComments.filter((currentComment) => {
-            if(currentComment.id === id) return false;
-            return true;
-          })
-        });
-
-      }
+        return newComments;
+      });
 
       setShowUndoButton(true);
 
@@ -92,60 +72,39 @@ export default function App() {
   }
 
   const sortCommentsOnVotes = function () {
-    setComments((currentComments) => {
-      return currentComments.sort((a, b) => {
-        return -(a.score - b.score);
+    try {
+      setComments((currentComments) => {
+        const newComments = {...currentComments};
+  
+        for(let parentId in newComments) {
+          newComments[parentId] = newComments[parentId].sort((a, b) => {
+            return -(a.score - b.score);
+          })
+        }
+  
+        return newComments;
       });
-    })
+    } catch(error) {
+      console.log(error);
+    } 
   }
 
   const changeVote = function (count, id, parentId) {
     try {
-      if(parentId) {
-        // changing the vote of reply
-        setComments((currentComments) => {
-          return currentComments.map((currentComment) => {
-            if(currentComment.id !== parentId) {
-              return currentComment;
-            }
+      parentId = parentId ?? null;
 
-            const newComment = {...currentComment};
+      setComments((prevComments) => {
+        const newComments = {...prevComments};
 
-            newComment.replies = newComment.replies.map((currentReply) => {
-              if(currentReply.id === id) {
-                const newReply = {...currentReply};
-
-                if(newReply.score === 0 && count === -1) return newReply;
-
-                newReply.score += count;
-
-                return newReply;
-              }
-
-              return currentReply;
-            });
-
-            return newComment;
-          })
+        newComments[parentId] = newComments[parentId].map((currentComment) => {
+          if(currentComment.id === id) {
+            return {...currentComment, score : currentComment.score + count}
+          }
+          return currentComment;
         });
-        
-      } else {
-        //  changing the vote of a comment
-        setComments((currentComments) => {
-          return currentComments.map((currentComment) => {
-            if(currentComment.id === id) {
-              const newComment = {...currentComment};
 
-              if(newComment.score === 0 && count === -1) return newComment;
-
-              newComment.score += count;
-              return newComment;
-            } 
-            return currentComment;
-          });
-        });
-      }
-
+        return newComments;
+      });
       sortCommentsOnVotes();
     } catch(error) {
       console.log(error);
@@ -154,88 +113,60 @@ export default function App() {
 
   const updateContent = function (newContent, id, parentId) {
     try {
-      if(parentId) {
-        // update reply
-        setComments((currentComments) => {
-          return currentComments.map((currentComment) => {
-            
-            if(currentComment.id !== parentId) {
-              return currentComment;
-            }
+      parentId = parentId ?? null;
 
-            const newComment = {...currentComment};
+      setComments((prevComments) => {
+        const newComments = {...prevComments};
 
-            newComment.replies = newComment.replies.map((currentReply) => {
-              if(currentReply.id !== id) {
-                return currentReply;
-              }
+        newComments[parentId] = newComments[parentId].map((currentComment) => {
+          if(currentComment.id !== id) return currentComment;
 
-              const newReply = {...currentReply};
+          currentComment.content = newContent;
+          return currentComment;
+        });
 
-              newReply.content = newContent;
-
-              return newReply;
-            });
-
-            return newComment;
-          })
-        })
-      } else {
-        //  update comment
-        setComments((currentComments) => {
-          return currentComments.map((currentComment) => {
-            if(currentComment.id !== id) {
-              return currentComment;
-            }
-
-            const newComment = {...currentComment};
-            newComment.content = newContent;
-
-            return newComment;
-          })
-        })
-      }
+        return newComments;
+      });
     } catch(error) {
-
+      console.log(error);
     }
   }
 
-  const addReply = function (content, replyingTo, commentId) {
+  const addReply = function (content, parentUserName, parentId) {
     try{
       if(!content) return;
-      setComments((currentComments) => {
-        return currentComments.map((currentComment) => {
-          if(currentComment.id !== commentId) {
-            return currentComment;
-          }
 
-          const newComment = {...currentComment};
+      const newReply = {
+        "id": uuid(),
+        "content": content,
+        "score": 0,
+        "replyingTo": parentUserName,
+        "user": currentUserData
+      }
 
-          const newReply = {
-            "id": uuid(),
-            "content": content,
-            "score": 0,
-            "replyingTo": replyingTo,
-            "user": currentUser
-          }
+      setComments((prevComments) => {
+        const newComments = {...prevComments};
 
-          newComment.replies = [...newComment.replies, newReply];
+        if(!newComments[parentId]) {
+          newComments[parentId] = [];
+        }
 
-          return newComment;
-        });
-      })
+        newComments[parentId].push(newReply);
+
+        return newComments;
+      });
     } catch(error) {
       console.log(error);
     }
   }
 
   const undoDelete = function () {
-    setComments([...prevComments]);
-    setShowUndoButton(false);
-  }
-  
-  const hideUndoButton = function () {
-    setShowUndoButton(false);
+    try {
+      setComments({...prevComments});
+      setShowUndoButton(false);
+    } catch(error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -248,6 +179,8 @@ export default function App() {
     }
   }, [showUndoButton])
 
+  const rootComments = comments[null];
+
   return (
     <div className="app-container">
       {
@@ -259,24 +192,25 @@ export default function App() {
           >Undo Delete</button>
           <img 
             src = {crossIcon}
-            onClick = {hideUndoButton}
+            onClick = {() => setShowUndoButton(false)}
           />
         </div>
       }
+
       <Comments 
+        rootComments = {rootComments}
         comments = {comments}
-        deleteComment = {() => setShowModal(true)}
+        showDeleteModal = {() => setShowModal(true)}
         setIdOfCommentToDelete = {setIdOfCommentToDelete}
         setParentIdOfCommentToDelete = {setParentIdOfCommentToDelete}
         changeVote = {changeVote}
-        currentUser = {currentUser}
+        currentUser = {currentUserData}
         updateContent = {updateContent}
-        profileUrl = {currentUser.image.webp}
         addReply = {addReply}
       />
 
       <AddNewComment 
-        profileUrl = {currentUser.image.webp}
+        profileUrl = {currentUserData.image.webp}
         add = {addComment}
       />
 
